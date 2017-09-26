@@ -17,7 +17,7 @@ And I didn't want to do any of this manually. So I wrote Iko
 
 ## Solution
 
-Iko uses [Toml]() to define the commands that can be run. Assume you want to
+Iko uses [Toml](https://github.com/toml-lang/toml) to define the commands that can be run. Assume you want to
 perform 3 tasks
 
 - Open a folder
