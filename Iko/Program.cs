@@ -66,9 +66,21 @@ namespace Iko
 
             var table = config.Get<TomlTable>(cmd);
 
-            Run(table);
-
-            return (int)ReturnCodes.Success;
+            try
+            {
+                Run(table);
+                return (int)ReturnCodes.Success;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return (int)ReturnCodes.ImproperTaskDefinition;
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return (int)ReturnCodes.UnhandledException;
+            }
         }
 
         private static void Run(TomlTable table)
@@ -83,7 +95,9 @@ namespace Iko
             Success = 0,
             NoCommandSpecified,
             ConfigFileNotFound,
-            CommandNotFound
+            CommandNotFound,
+            ImproperTaskDefinition,
+            UnhandledException
         }
     }
 }

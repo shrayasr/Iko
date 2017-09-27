@@ -1,4 +1,6 @@
-﻿using Nett;
+﻿using Iko.Utils;
+using Nett;
+using System;
 using System.Diagnostics;
 
 namespace Iko.Runners
@@ -27,8 +29,11 @@ namespace Iko.Runners
 
             public VimParams(TomlTable table)
             {
-                table.TryGetValue<string>("path", out string path);
-                table.TryGetValue<bool>("as-admin", out bool asAdmin);
+                table.TryGetValue("path", out string path);
+                table.TryGetValue("as-admin", out bool asAdmin);
+
+                if (path.IsEmpty())
+                    throw new ArgumentException("'path' cannot be empty for a VIM task");
 
                 Path = path;
                 AsAdmin = asAdmin;

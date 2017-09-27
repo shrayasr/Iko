@@ -1,6 +1,6 @@
 ﻿using Nett;
 
-namespace Iko
+namespace Iko.Utils
 {
     public static class NettExtensions
     {

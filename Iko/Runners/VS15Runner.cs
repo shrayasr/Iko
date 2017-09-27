@@ -1,4 +1,6 @@
-﻿using Nett;
+﻿using Iko.Utils;
+using Nett;
+using System;
 using System.Diagnostics;
 
 namespace Iko.Runners
@@ -21,7 +23,11 @@ namespace Iko.Runners
 
             public VS15Params(TomlTable table)
             {
-                table.TryGetValue<string>("path", out string path);
+                table.TryGetValue("path", out string path);
+
+                if (path.IsEmpty())
+                    throw new ArgumentException("'Path' cannot be empty for a VS15 task");
+
                 Path = path;
             }
         }

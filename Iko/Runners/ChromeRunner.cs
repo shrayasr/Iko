@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using Nett;
 using System.Diagnostics;
+using System;
+using Iko.Utils;
 
 namespace Iko.Runners
 {
@@ -27,12 +29,13 @@ namespace Iko.Runners
 
             public ChromeParams(TomlTable table)
             {
-                //TODO handle required params being present
-
                 table.TryGetValue("newtab", out bool newTab);
-                NewTab = NewTab;
-
                 table.TryGetValue("url", out string url);
+
+                if (url.IsEmpty())
+                    throw new ArgumentException("'URL' cannot be empty for a chrome task");
+
+                NewTab = NewTab;
                 URL = url;
             }
         }
