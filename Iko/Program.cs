@@ -12,12 +12,12 @@ namespace Iko
     {
         private static IDictionary _runnerMap = new Dictionary<string, IRunner>
         {
-            { "browser", new DefaultBrowserRunner() },
-            { "vs15", new VS15Runner() },
-            { "vs17", new VS17Runner() },
-            { "folder", new FolderRunner() },
-            { "vim", new VimRunner() },
-            { "vscode", new VSCodeRunner() }
+            { "browser",    new DefaultBrowserRunner() },
+            { "vs15",       new VS15Runner() },
+            { "vs17",       new VS17Runner() },
+            { "folder",     new FolderRunner() },
+            { "vim",        new VimRunner() },
+            { "vscode",     new VSCodeRunner() }
         };
 
         static int Main(string[] args)
@@ -64,10 +64,9 @@ namespace Iko
                 cmd = insensitiveKeyMap[cmd.ToUpper()];
             }
 
-            var table = config.Get<TomlTable>(cmd);
-
             try
             {
+                var table = config.Get<TomlTable>(cmd);
                 Run(table);
                 return (int)ReturnCodes.Success;
             }
