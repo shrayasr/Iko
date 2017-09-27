@@ -20,38 +20,70 @@ namespace Iko
             { "vscode", new VSCodeRunner() }
         };
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var cmd = args.ToList().FirstOrDefault();
 
             if (cmd == null)
-                return;
+            {
+                Console.Error.WriteLine("No command specified");
+                return (int)ReturnCodes.NoCommandSpecified;
+            }
 
             var configPath = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
                     "iko.toml"
                 );
 
-            //TODO Check for file exist
+            if (!File.Exists(configPath))
+            {
+                Console.Error.WriteLine($"Config file not found at '{configPath}'");
+                return (int)ReturnCodes.ConfigFileNotFound;
+            }
 
             var config = Toml.ReadFile(configPath);
 
-            if (!config.Keys.Contains(cmd))
-                return; //TODO handle case where cmd doesn't exist
+            var insensitiveKeyMap = config
+                                        .Keys
+                                        .Aggregate(
+                                            new Dictionary<string, string>(),
+                                            (acc, val) =>
+                                            {
+                                                acc.Add(val.ToUpper(), val);
+                                                return acc;
+                                            }
+                                        );
 
-            //TODO how to handle this case insensitively?
+            if (!insensitiveKeyMap.ContainsKey(cmd.ToUpper()))
+            {
+                Console.Error.WriteLine($"Command '{cmd}' isn't defined in the config file");
+                return (int)ReturnCodes.CommandNotFound;
+            }
+            else
+            {
+                cmd = insensitiveKeyMap[cmd.ToUpper()];
+            }
+
             var table = config.Get<TomlTable>(cmd);
 
             Run(table);
+
+            return (int)ReturnCodes.Success;
         }
 
         private static void Run(TomlTable table)
         {
             var command = table.Get<string>("cmd");
-
             var runner = (IRunner)_runnerMap[command];
-
             runner.Run(table);
+        }
+
+        enum ReturnCodes
+        {
+            Success = 0,
+            NoCommandSpecified,
+            ConfigFileNotFound,
+            CommandNotFound
         }
     }
 }
