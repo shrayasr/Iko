@@ -76,6 +76,11 @@ namespace Iko
                 Console.Error.WriteLine(ex.Message);
                 return (int)ReturnCodes.ImproperTaskDefinition;
             }
+            catch (NotSupportedException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                return (int)ReturnCodes.NoRunnerAvailable;
+            }
             catch (Exception ex)
             {
                 Console.Error.WriteLine(ex.Message);
@@ -87,7 +92,15 @@ namespace Iko
         {
             var command = table.Get<string>("cmd");
             var runner = (IRunner)_runnerMap[command];
-            runner.Run(table);
+
+            if (runner == null)
+            {
+                throw new NotSupportedException($"Runner not implemented for '{command}'");
+            }
+            else
+            {
+                runner.Run(table);
+            }
         }
 
         enum ReturnCodes
@@ -97,7 +110,8 @@ namespace Iko
             ConfigFileNotFound,
             CommandNotFound,
             ImproperTaskDefinition,
-            UnhandledException
+            UnhandledException,
+            NoRunnerAvailable
         }
     }
 }
