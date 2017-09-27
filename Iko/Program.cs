@@ -12,10 +12,10 @@ namespace Iko
     {
         private static IDictionary _runnerMap = new Dictionary<string, IRunner>
         {
-            { "chrome", new ChromeRunner() },
+            { "browser", new DefaultBrowserRunner() },
             { "vs15", new VS15Runner() },
             { "vs17", new VS17Runner() },
-            { "explorer", new ExplorerRunner() },
+            { "folder", new FolderRunner() },
             { "vim", new VimRunner() },
             { "vscode", new VSCodeRunner() }
         };

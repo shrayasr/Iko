@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace Iko.Runners
 {
-    public class ExplorerRunner : IRunner
+    public class FolderRunner : IRunner
     {
         public void Run(TomlTable table)
         {

@@ -6,7 +6,7 @@ using Iko.Utils;
 
 namespace Iko.Runners
 {
-    public class ChromeRunner : IRunner
+    public class DefaultBrowserRunner : IRunner
     {
         public void Run(TomlTable table)
         {
