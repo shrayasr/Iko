@@ -28,7 +28,7 @@ Then you'd define `~/iko.toml` like so:
 
 ```toml
 [foobar]
-cmd = 'explorer'
+cmd = 'folder'
 path = 'C:\path\to\selected\folder'
 
 [hosts]
@@ -52,10 +52,10 @@ these tasks using their names. So:
 
 Currently, the following values are allowed in the `cmd` section
 
-- `chrome`
+- `browser`
 - `vs15`
 - `vs17`
-- `explorer`
+- `folder`
 - `vim`
 - `vscode`
 
