@@ -33,7 +33,7 @@ namespace Iko.Runners
                 }
                 else
                 {
-                    throw new ArgumentException("Could not find the path for VS15. Registry value does not exist");
+                    throw new ArgumentException("Could not find the path for VS17. Registry value does not exist");
                 }
                     
             }
