@@ -15,7 +15,7 @@ namespace Iko.Runners
 
             var path = GetVisualStudioInstallationFolder();
 
-            Process.Start("cmd", $@"/c start "+path+" {@params.Path}");
+            Process.Start("cmd", $@"/c start "+path+" "+@params.Path);
         }
 
         //Requires admin privileges 
