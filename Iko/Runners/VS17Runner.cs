@@ -2,9 +2,7 @@
 using Nett;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.Win32;
-using System.Runtime.InteropServices;
 
 namespace Iko.Runners
 {
