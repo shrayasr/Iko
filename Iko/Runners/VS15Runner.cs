@@ -2,6 +2,7 @@
 using Nett;
 using System;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace Iko.Runners
 {
@@ -11,11 +12,37 @@ namespace Iko.Runners
         {
             var @params = new VS15Params(table);
 
-            Process.Start(
-                    "cmd",
-                  $@"/c start ""C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe"" {@params.Path}"
-                );
+            var path = string.Format("\"{0}\"", GetVisualStudioInstallationFolder());
+           
+            Process.Start("cmd", $@"/c start " + path + " " + @params.Path);
         }
+
+        //Requires admin privileges 
+        private string GetVisualStudioInstallationFolder()
+        {
+            var vs15BaseRegistry = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\14.0", true);
+
+            var vs15exePath = vs15BaseRegistry?.GetValue("InstallDir");
+
+            if (vs15exePath!= null)
+            {
+                return vs15exePath +"devenv.exe";
+            }
+            else
+            {
+                vs15BaseRegistry = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\VisualStudio\\14.0");
+                vs15exePath = vs15BaseRegistry?.GetValue("InstallDir");
+
+                if (vs15exePath != null)
+                {
+                    return vs15exePath + "devenv.exe";
+                }
+                else
+                    throw new ArgumentException("Could not find the path for VS15. Registry value does not exist");
+            }
+
+        }
+
 
         class VS15Params
         {
