@@ -13,34 +13,25 @@ namespace Iko.Runners
         {
             var @params = new VS17Params(table);
 
-            var path = GetVisualStudioInstallationFolder();
-
+            var path = string.Format("\"{0}\"",GetVisualStudioInstallationFolder());
+         
             Process.Start("cmd", $@"/c start "+path+" "+@params.Path);
         }
 
         //Requires admin privileges 
         private string GetVisualStudioInstallationFolder()
         {
-            try
+            var vs17BaseRegistry = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\SxS\\VS7", true);
+            var vs17exePath = vs17BaseRegistry?.GetValue("15.0");
+            if (vs17exePath != null)
             {
-                var vs17exe=string.Empty;
-                var vs17BaseDirectory = Registry.LocalMachine.OpenSubKey("SOFTWARE\\WOW6432Node\\Microsoft\\VisualStudio\\SxS\\VS7", true);
-
-                if (vs17BaseDirectory.GetValue("15.0") != null)
-                {
-                    vs17exe = vs17BaseDirectory.GetValue("15.0") + @"Common7\IDE\devenv.exe";
-                    return vs17exe;
-                }
-                else
-                {
-                    throw new ArgumentException("Could not find the path for VS17. Registry value does not exist");
-                }
                     
+                return vs17exePath + @"Common7\IDE\devenv.exe";
             }
-            catch (Exception ex)
+            else
             {
-                throw new ArgumentException(ex.ToString());
-            }
+                throw new ArgumentException("Could not find the path for VS17. Registry value does not exist");
+            }        
         }
 
         class VS17Params
@@ -52,7 +43,7 @@ namespace Iko.Runners
                 table.TryGetValue("path", out string path);
 
                 if (path.IsEmpty())
-                    throw new ArgumentException("'Path' cannot be empty for a VS15 task");
+                    throw new ArgumentException("'Path' cannot be empty for a VS17 task");
 
                 Path = path;
             }
